@@ -17,11 +17,15 @@ import numpy as np
 import cv2
 import time
 import face_recognition
+import os
 
 from sklearn import tree
 from sklearn.svm import SVC
 from sklearn.cross_validation import train_test_split
+from sklearn.externals import joblib
 from sys import argv
+
+IMAGE_EXTENSIONS = ['.jpg', '.png' '.bmp']
 
 
 def read_data():
@@ -62,9 +66,28 @@ def train(data, labels, algorithm, use_hsv):
     return classifier
 
 
-def apply_to_image(path, result_image, algorithm='tree', use_hsv=True):
-    data, labels = read_data()
-    classifier = train(data, labels, algorithm, use_hsv)
+def get_model(filename):
+    if os.path.isfile(filename):
+        return load_model(filename)
+    else:
+        return None
+
+
+def save_model(model, filename):
+    joblib.dump(model, filename)
+    print("==> Model saved in {:s}".format(filename))
+
+
+def load_model(filename):
+    print("==> Loading model in file {:s}".format(filename))
+    return joblib.load(filename)
+
+
+def maybe_is_image(filename):
+    return True if filename.lower()[-4:] in IMAGE_EXTENSIONS else False
+
+
+def apply_to_image(path, classifier, use_hsv=True):
 
     img = cv2.imread(path)
 
@@ -96,16 +119,24 @@ def apply_to_image(path, result_image, algorithm='tree', use_hsv=True):
             new_image[top:bottom, left:right] = (-(img_labels - 1) + 1) * 255
             extension = '_RGB.'
 
-        cv2.imwrite(result_image[:-3] + extension + result_image[-3:],
+        cv2.imwrite(path[:-3] + extension + path[-3:],
                     new_image)  # from [1 2] to [0 255]
 
 
 def main(argv):
     image = argv[1]
-    result_image = argv[2]
-    algorithm = argv[3]
+    algorithm = argv[2]
+    classifier_filename = argv[3]
+    use_hsv = True if len(argv) == 5 and argv[4] == '1' else False
 
-    apply_to_image(image, result_image, algorithm, False)
+    classifier = get_model(classifier_filename)
+
+    if classifier is None:
+        data, labels = read_data()
+        classifier = train(data, labels, algorithm=algorithm, use_hsv=use_hsv)
+        save_model(classifier, classifier_filename)
+
+    apply_to_image(image, classifier, use_hsv=use_hsv)
 
 
 if __name__ == '__main__':
