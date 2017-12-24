@@ -22,7 +22,7 @@ def blend_features(F_A, R_Bp, alpha, tau=0.05, kappa=300.):
 def normalize(feat_map):
     return feat_map/np.linalg.norm(feat_map,ord=2,axis=(2),keepdims=True)
 
-def main(A_path,Bp_path,out):
+def main(A_path, Bp_path, out, use_gpu):
 
     patch_sizes = [3, 3, 3, 5, 5] # PM patch sizes
     rand_radii = [14, 6, 6, 4, 4] # PM random search radii
@@ -31,7 +31,7 @@ def main(A_path,Bp_path,out):
     deconv_iters = [5, 5, 5, 5]
     pm_iters = [5, 1, 1, 1, 1]
 
-    model = VGG(use_gpu=False)
+    model = VGG(use_gpu=use_gpu)
 
     imaga_A_tensor  = image_loader.load(A_path)
     image_Bp_tensor = image_loader.load(Bp_path)
@@ -86,8 +86,21 @@ def main(A_path,Bp_path,out):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('content')
-    parser.add_argument('style')
-    parser.add_argument('out')
+    parser.add_argument('gpu_id',
+                        type=int,
+                        help='GPU id. Please set -1 to use CPU')
+    parser.add_argument('content',
+                        help='Path to content image.')
+    parser.add_argument('style',
+                        help='Path to style image.')
+    parser.add_argument('out',
+                        help='Path to output image.')
     args = parser.parse_args()
-    main(args.content, args.style, args.out)
+
+    if args.gpu_id == -1:
+        use_gpu = False
+        main(args.content, args.style, args.out, use_gpu)
+    else:
+        use_gpu = True
+        with torch.cuda.device(args.gpu_id):
+            main(args.content, args.style, args.out, use_gpu)
