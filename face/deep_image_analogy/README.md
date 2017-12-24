@@ -6,10 +6,13 @@
 - torchvision 0.1.9
 
 ## Usage
-`python deep_image_analogy.py [Image_A_path] [Image_Bp_path] [Out_path]`
+`python deep_image_analogy.py [GPU id] [Image_A_path] [Image_Bp_path] [Out_path]`
 
 For example,  
-`python deep_image_analogy.py demo/content.png demo/style.png demo/out.png`
+CPU:  
+`python deep_image_analogy.py -1 demo/content.png demo/style.png demo/out.png`  
+GPU:   
+`python deep_image_analogy.py [GPU id] demo/content.png demo/style.png demo/out.png`
 
 ## Acknowledgements
 Our codes acknowledge
