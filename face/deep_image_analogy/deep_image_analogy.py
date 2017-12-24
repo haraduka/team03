@@ -23,14 +23,18 @@ def blend_features(F_A, R_Bp, alpha, tau=0.05, kappa=300.):
 def normalize(feat_map):
     return feat_map/np.linalg.norm(feat_map,ord=2,axis=(2),keepdims=True)
 
-def main(A_path, Bp_path, out, use_gpu):
+def main(A_path, Bp_path, out, use_gpu, simple_mode):
 
     patch_sizes = [3, 3, 3, 5, 5] # PM patch sizes
     rand_radii = [14, 6, 6, 4, 4] # PM random search radii
 
     alphas = [0.8, 0.7, 0.6, 0.1]
-    deconv_iters = [5, 5, 5, 5]
-    pm_iters = [5, 1, 1, 1, 1]
+    if simple_mode:
+        deconv_iters = [5, 5, 5, 5]
+        pm_iters = [5, 1, 1, 1, 1]
+    else:
+        deconv_iters = [100, 100, 100, 100]
+        pm_iters = [5, 5, 5, 5, 5]
 
     model = VGG(use_gpu=use_gpu)
 
@@ -96,12 +100,17 @@ if __name__ == '__main__':
                         help='Path to style image.')
     parser.add_argument('out',
                         help='Path to output image.')
+    parser.add_argument('--simple_mode',
+                        dest='simple_mode',
+                        default=False,
+                        action='store_true',
+                        help='Run in simple(fast) mode')
     args = parser.parse_args()
 
     if args.gpu_id == -1:
         use_gpu = False
-        main(args.content, args.style, args.out, use_gpu)
+        main(args.content, args.style, args.out, use_gpu, args.simple_mode)
     else:
         use_gpu = True
         with torch.cuda.device(args.gpu_id):
-            main(args.content, args.style, args.out, use_gpu)
+            main(args.content, args.style, args.out, use_gpu, args.simple_mode)
