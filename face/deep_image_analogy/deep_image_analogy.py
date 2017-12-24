@@ -2,6 +2,7 @@ import argparse
 import numpy as np
 import cv2
 import copy
+import torch
 
 import image_loader
 from VGG import VGG
