@@ -28,7 +28,7 @@ def main(A_path, Bp_path, out, use_gpu, simple_mode):
     patch_sizes = [3, 3, 3, 5, 5] # PM patch sizes
     rand_radii = [14, 6, 6, 4, 4] # PM random search radii
 
-    alphas = [0.8, 0.8, 0.6, 0.1]
+    alphas = [0.8, 0.7, 0.6, 0.1]
     if simple_mode:
         deconv_iters = [5, 5, 5, 5]
         pm_iters = [5, 1, 1, 1, 1]
