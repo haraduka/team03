@@ -69,9 +69,9 @@ class VGG(object):
         feature = Variable(feature)
 
         if optim_name == 'LBFGS':
-            optimizer = optim.LBFGS([noise],lr=1, max_iter=20, tolerance_grad=1e-4, history_size=4)
+            optimizer = optim.LBFGS([noise], lr=1.,  max_iter=20)
         elif optim_name == 'Adam':
-            optimizer = optim.Adam([noise],lr=1)
+            optimizer = optim.Adam([noise], lr=1.)
 
         criterion = nn.MSELoss()
         for i in range(1,iters):
@@ -80,6 +80,8 @@ class VGG(object):
                 output = self.models[L](noise)
                 loss = criterion(output, feature)
                 loss.backward()
+                noise.data.clamp_(0., 1.)
+                print(i, loss.cpu().data.numpy())
                 return loss
 
             if optim_name == 'LBFGS':
@@ -90,9 +92,8 @@ class VGG(object):
                 loss = criterion(output, feature)
                 loss.backward()
                 optimizer.step()
-
-            noise.data.clamp_(0., 1.)
-            print(i, loss.cpu().data.numpy())
+                noise.data.clamp_(0., 1.)
+                print(i, loss.cpu().data.numpy())
 
         noise = noise.cpu().data.squeeze().numpy()
         return noise.transpose(1,2,0)

@@ -33,7 +33,7 @@ def main(A_path, Bp_path, out, use_gpu, simple_mode):
         deconv_iters = [5, 5, 5, 5]
         pm_iters = [5, 1, 1, 1, 1]
     else:
-        deconv_iters = [100, 100, 100, 100]
+        deconv_iters = [1700, 1700, 1700, 1700]
         pm_iters = [5, 5, 5, 5, 5]
 
     model = VGG(use_gpu=use_gpu)
