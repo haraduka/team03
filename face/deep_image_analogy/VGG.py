@@ -41,12 +41,11 @@ class VGG(object):
         print('model load finished')
 
     def get_features(self, input_image):
-        out = input_image
         features = []
-
         if self.use_gpu:
             input_image = input_image.cuda()
 
+        out = input_image
         for model in self.models:
             out = model(out)
             features.append(out)
