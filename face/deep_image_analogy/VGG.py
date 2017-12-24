@@ -30,6 +30,8 @@ class VGG(object):
                 name = "relu_" + str(i)
                 model.add_module(name, layer)
                 if name in last_layer_names:
+                    if self.use_gpu:
+                        model = model.cuda()
                     self.models.append(model)
                     model = nn.Sequential() # 新しいmodelを作成
                 i += 1
@@ -37,11 +39,6 @@ class VGG(object):
                 name = "pool_" + str(i)
                 model.add_module(name, nn.AvgPool2d((2,2)))
         print('model load finished')
-
-        if self.use_gpu:
-            self.models = []
-            for model in self.models[:]:
-                self.models.append(model.cuda())
 
     def get_features(self, input_image):
         out = input_image
