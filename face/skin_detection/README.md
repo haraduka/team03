@@ -1,4 +1,4 @@
-# Skin detection
+# Skin Detection
 
 Using the [Skin Segmentation Dataset](https://archive.ics.uci.edu/ml/datasets/Skin+Segmentation), a decision tree is
 trained to recognize skin in pictures. SVM is also included, but the model takes too much to train (and decision tree's
