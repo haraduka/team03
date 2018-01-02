@@ -6,8 +6,7 @@ performance is very good already).
 
 ## Usage
 ```
-python detection_by_mlalgorithm.py <target image> <algorithm> <filename to save model or load a previously trained
-model> <use_hsv>
+python detection_by_mlalgorithm.py <target image> <algorithm> <filename to save model or load a previously trained model> <use_hsv>
 ```
 
 Where:
