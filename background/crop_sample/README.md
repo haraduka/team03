@@ -1,0 +1,11 @@
+### Files
+- crop_character_convexhull.py
+  - python crop_character_convexhull.py imageFile
+  - crop convexhull of character in imageFile using FAST feature.
+- crop_rectangle_and_merge.py
+  - python crop_rectangle_and_merge.py imageFile
+  - divide imageFile to some small images, crop rectangle of character in respective small imageFiles using FAST feature and merge them.
+- crop_and_merge2.py
+  - python crop_and_merge2.py imageFile
+  - If the background is an single color, this program can remove it and paste many character images into one image file. 
+- example: example results
